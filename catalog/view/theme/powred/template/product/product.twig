@@ -79,34 +79,30 @@
 							<div class="reward-block"></div>
 						</div>
 
-						<!-- Prodyuct rating status -->
-						<div class="rating-section product-rating-status">
-
-							<div class="rating">
-								<span class="fa fa-stack">
-									<i class="fa fa-star-o"></i>
-								</span>
-								<span class="fa fa-stack">
-									<i class="fa fa-star-o"></i>
-								</span>
-								<span class="fa fa-stack">
-									<i class="fa fa-star-o"></i>
-								</span>
-								<span class="fa fa-stack">
-									<i class="fa fa-star-o"></i>
-								</span>
-								<span class="fa fa-stack">
-									<i class="fa fa-star-o"></i>
-								</span>
-								<span class="review-link review-link-show">
-									<a href="#">0 Review(s)</a>
-								</span>
-								<span class="review-link review-link-write">
-									<a href="#">Add your review</a>
-								</span>
+						{% if review_status %}
+							<div class="rating-section product-rating-status">
+								<div class="rating">
+									{% for i in 1..5 %}
+										{% if rating < i %}
+											<span class="fa fa-stack">
+												<i class="fa fa-star-o fa-stack-1x"></i>
+											</span>
+										{% else %}
+											<span class="fa fa-stack">
+												<i class="fa fa-star fa-stack-1x"></i>
+												<i class="fa fa-star-o fa-stack-1x"></i>
+											</span>
+										{% endif %}
+									{% endfor %}
+									<span class="review-link review-link-show">
+										<a href="#">{{ reviews }}</a>
+									</span>
+									<span class="review-link review-link-write">
+										<a href="#">{{ text_write }}</a>
+									</span>
+								</div>
 							</div>
-
-						</div>
+						{% endif %}
 						<ul class="list-unstyled product-section">
 							<li>
 								<strong>Product Code:</strong>
@@ -129,7 +125,7 @@
 							<div class="product-options">
 								{% for option in options %}
 									{% if option.type == 'select' %}
-										<div class="option-select form-group{% if option.required %} required {% endif %}">
+										<div class="form-group option-select{% if option.required %} required {% endif %}">
 											<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
 											<select name="option[{{ option.product_option_id }}]" id="input-option{{ option.product_option_id }}" class="form-control">
 												<option value="">{{ text_select }}</option>
@@ -150,9 +146,11 @@
 												<div id="input-option{{ option.product_option_id }}">
 													{% for option_value in option.product_option_value %}
 														<div class="radio">
-															<input type="radio" name="option[{{ option.product_option_id }}]" value="" id="option[{{ option.product_option_id }}]">
+															<input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" id="option[{{ option.product_option_id }}]">
 															<label for="option[{{ option.product_option_id }}]">
-																<img width="21" height="21" data-toggle="tooltip" title="" src="{{ base }}/image/cache/catalog/options/{{ option_value.name|lower }}-50x50.png" alt=" +" class="img-thumbnail" data-original-title="{{ option_value.name }}">
+																{% if option_value.image %}
+																	<img width="21" height="21" data-toggle="tooltip" title="" src="{{ option_value.image }}" alt=" +" class="img-thumbnail" data-original-title="{{ option_value.name }}">
+																{% endif %}
 															</label>
 														</div>
 													{% endfor %}
@@ -160,20 +158,110 @@
 											</div>
 										</div>
 									{% endif %}
+									{% if option.type == 'checkbox' %}
+										<div class="form-group option-check{% if option.required %} required {% endif %}">
+											<label class="control-label">{{ option.name }}</label>
+											<div id="input-option{{ option.product_option_id }}">
+												{% for option_value in option.product_option_value %}
+													<div class="checkbox">
+														<label>
+															<input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}"/>
+															{% if option_value.image %}
+																<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail"/>
+															{% endif %}
+															{{ option_value.name }}
+															{% if option_value.price %}
+																({{ option_value.price_prefix }}{{ option_value.price }})
+															{% endif %}
+														</label>
+													</div>
+												{% endfor %}
+											</div>
+										</div>
+									{% endif %}
+									{% if option.type == 'text' %}
+										<div class="form-group option-text{% if option.required %} required {% endif %}">
+											<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+											<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+										</div>
+									{% endif %}
+									{% if option.type == 'textarea' %}
+										<div class="form-group option-textarea{% if option.required %} required {% endif %}">
+											<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+											<textarea name="option[{{ option.product_option_id }}]" rows="5" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control">{{ option.value }}</textarea>
+										</div>
+									{% endif %}
+									{% if option.type == 'file' %}
+										<div class="form-group option-file{% if option.required %} required {% endif %}">
+											<label class="control-label">{{ option.name }}</label>
+											<button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block">
+												<i class="fa fa-upload"></i>
+												{{ button_upload }}</button>
+											<input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}"/>
+										</div>
+									{% endif %}
+									{% if option.type == 'date' %}
+										<div class="form-group option-date{% if option.required %} required {% endif %}">
+											<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+											<div class="input-group date">
+												<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD" id="input-option{{ option.product_option_id }}" class="form-control"/>
+												<span class="input-group-btn">
+													<button class="btn btn-default" type="button">
+														<i class="fa fa-calendar"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									{% endif %}
+									{% if option.type == 'datetime' %}
+										<div class="form-group option-date{% if option.required %} required {% endif %}">
+											<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+											<div class="input-group datetime">
+												<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-option{{ option.product_option_id }}" class="form-control"/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<i class="fa fa-calendar"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									{% endif %}
+									{% if option.type == 'time' %}
+										<div class="form-group option-time{% if option.required %} required {% endif %}">
+											<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+											<div class="input-group time">
+												<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="HH:mm" id="input-option{{ option.product_option_id }}" class="form-control"/>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default">
+														<i class="fa fa-calendar"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									{% endif %}
 								{% endfor %}
 							</div>
-
-							<!-- product reccurings -->
-
-							<!-- Add to cart form -->
+							{% if recurrings %}
+								<hr>
+								<h3>{{ text_payment_recurring }}</h3>
+								<div class="form-group required">
+									<select name="recurring_id" class="form-control">
+										<option value="">{{ text_select }}</option>
+										{% for recurring in recurrings %}
+											<option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
+										{% endfor %}
+									</select>
+									<div class="help-block" id="recurring-description"></div>
+								</div>
+							{% endif %}
 							<div class="form-group form-horizontal">
 								<div class="form-group">
-									<div class="col-sm-18">
+									<div class="col-sm-12">
 										<div class="quantity">
 											<label class="control-label" for="input-quantity"></label>
 											<a class="counter counter-minus material-icons-remove" href="#"></a>
-											<input type="text" name="quantity" value="1" size="2" id="input-quantity" class="form-control">
-											<input type="hidden" name="product_id" value="45">
+											<input type="text" name="quantity" value="{{ minimum }}" size="2" id="input-quantity" class="form-control">
+											<input type="hidden" name="product_id" value="{{ product_id }}">
 											<a class="counter counter-plus material-icons-add" href="#"></a>
 										</div>
 										<br>
@@ -181,7 +269,11 @@
 									</div>
 								</div>
 							</div>
-
+							{% if minimum > 1 %}
+								<div class="alert alert-info">
+									<i class="fa fa-info-circle"></i>
+									{{ text_minimum }}</div>
+							{% endif %}
 							<div class="cart-button">
 								<button type="button" class="product-btn" onclick="wishlist.add('45');">
 									<i class="fa fa-heart-o"></i>
@@ -423,19 +515,19 @@
 															<li>
 																<a href="#1" rel="1">
 																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
 																</a>
 															</li>
 															<li>
 																<a href="#2" rel="2">
 																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
 																</a>
 															</li>
 															<li>
 																<a href="#3" rel="3">
 																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
 																</a>
 															</li>
 														</ul>
@@ -445,17 +537,17 @@
 
 														<option value="1">
 															1 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
 														</option>
 
 														<option value="2">
 															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
 														</option>
 
 														<option value="3">
 															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
 														</option>
 
 													</select>
@@ -588,19 +680,19 @@
 															<li>
 																<a href="#11" rel="11">
 																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
 																</a>
 															</li>
 															<li>
 																<a href="#12" rel="12">
 																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
 																</a>
 															</li>
 															<li>
 																<a href="#13" rel="13">
 																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
 																</a>
 															</li>
 														</ul>
@@ -610,17 +702,17 @@
 
 														<option value="11">
 															1 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
 														</option>
 
 														<option value="12">
 															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
 														</option>
 
 														<option value="13">
 															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
 														</option>
 
 													</select>
@@ -750,7 +842,7 @@
 															<input type="checkbox" name="option[11][]" value="25" id="option[11][]25"><label for="option[11][]25">
 
 																Oily 
-																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
 															</label>
 														</div>
 
@@ -758,7 +850,7 @@
 															<input type="checkbox" name="option[11][]" value="26" id="option[11][]26"><label for="option[11][]26">
 
 																Dry 
-																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$15.00)
 															</label>
 														</div>
 
@@ -853,7 +945,7 @@
 															<input type="checkbox" name="option[14][]" value="31" id="option[14][]31"><label for="option[14][]31">
 
 																Oily 
-																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
 															</label>
 														</div>
 
@@ -861,7 +953,7 @@
 															<input type="checkbox" name="option[14][]" value="32" id="option[14][]32"><label for="option[14][]32">
 
 																Dry 
-																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$15.00)
 															</label>
 														</div>
 
@@ -869,7 +961,7 @@
 															<input type="checkbox" name="option[14][]" value="33" id="option[14][]33"><label for="option[14][]33">
 
 																Combination 
-																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
 															</label>
 														</div>
 
@@ -893,19 +985,19 @@
 															<li>
 																<a href="#34" rel="34">
 																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$5.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$5.00)
 																</a>
 															</li>
 															<li>
 																<a href="#35" rel="35">
 																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
 																</a>
 															</li>
 															<li>
 																<a href="#36" rel="36">
 																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
 																</a>
 															</li>
 														</ul>
@@ -915,17 +1007,17 @@
 
 														<option value="34">
 															1 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$5.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$5.00)
 														</option>
 
 														<option value="35">
 															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
 														</option>
 
 														<option value="36">
 															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
 														</option>
 
 													</select>
@@ -1054,19 +1146,19 @@
 															<li>
 																<a href="#52" rel="52">
 																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
 																</a>
 															</li>
 															<li>
 																<a href="#53" rel="53">
 																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
 																</a>
 															</li>
 															<li>
 																<a href="#54" rel="54">
 																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
 																</a>
 															</li>
 														</ul>
@@ -1076,17 +1168,17 @@
 
 														<option value="52">
 															1 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
 														</option>
 
 														<option value="53">
 															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
 														</option>
 
 														<option value="54">
 															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
 														</option>
 
 													</select>
@@ -1205,19 +1297,19 @@
 															<li>
 																<a href="#75" rel="75">
 																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
 																</a>
 															</li>
 															<li>
 																<a href="#76" rel="76">
 																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
 																</a>
 															</li>
 															<li>
 																<a href="#77" rel="77">
 																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																			                                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
 																</a>
 															</li>
 														</ul>
@@ -1227,17 +1319,17 @@
 
 														<option value="75">
 															1 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$20.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
 														</option>
 
 														<option value="76">
 															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$15.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
 														</option>
 
 														<option value="77">
 															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																													                                                                                                                                                                            (+$10.00)
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
 														</option>
 
 													</select>
