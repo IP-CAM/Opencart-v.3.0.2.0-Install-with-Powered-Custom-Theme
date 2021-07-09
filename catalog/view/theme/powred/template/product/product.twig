@@ -69,15 +69,22 @@
 					<div class="general_info product-info">
 						<h2 class="product-title">{{ heading_title }}</h2>
 						<div class="product-section">
-							<strong>Brands
-							</strong>
-							<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/manufacturer/info&amp;manufacturer_id=196">The Balm</a>
+							{% if manufacturer %}
+								<strong>{{ text_manufacturer }}</strong>
+								<a href={{ manufacturers }}>{{ manufacturer }}</a>
+							{% endif %}
 						</div>
-						<div class="price-section">
-							<span class="price-new">$24.00</span>
-							<span class="price-old">$30.00</span>
-							<div class="reward-block"></div>
-						</div>
+						{% if price %}
+							<div class="price-section">
+								{% if not special %}
+									<span class="price-new">{{ price }}</span>
+								{% else %}
+									<span class="price-new">{{ special }}</span>
+									<span class="price-old">{{ price }}</span>
+								{% endif %}
+								<div class="reward-block"></div>
+							</div>
+						{% endif %}
 
 						{% if review_status %}
 							<div class="rating-section product-rating-status">
@@ -95,28 +102,28 @@
 										{% endif %}
 									{% endfor %}
 									<span class="review-link review-link-show">
-										<a href="#">{{ reviews }}</a>
+										<a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;">{{ reviews }}</a>
 									</span>
 									<span class="review-link review-link-write">
-										<a href="#">{{ text_write }}</a>
+										<a href="" onclick="$('a[href=\'#tab-review\']').trigger('click'); return false;">{{ text_write }}</a>
 									</span>
 								</div>
 							</div>
 						{% endif %}
 						<ul class="list-unstyled product-section">
 							<li>
-								<strong>Product Code:</strong>
-								<span>Collectible</span>
+								<strong>{{ text_model }}</strong>
+								<span>{{ model }}</span>
 							</li>
-
+							{% if reward %}
+								<li>
+									<strong>{{ text_reward }}</strong>
+									<span>{{ reward }}</span>
+								</li>
+							{% endif %}
 							<li>
-								<strong>Reward Points:</strong>
-								<span>800</span>
-							</li>
-
-							<li>
-								<strong>Availability:</strong>
-								<span class="stock">In Stock</span>
+								<strong>{{ text_stock }}</strong>
+								<span class="stock">{{ stock }}</span>
 							</li>
 						</ul>
 					</div>
@@ -241,1195 +248,433 @@
 									{% endif %}
 								{% endfor %}
 							</div>
-							{% if recurrings %}
-								<hr>
-								<h3>{{ text_payment_recurring }}</h3>
-								<div class="form-group required">
-									<select name="recurring_id" class="form-control">
-										<option value="">{{ text_select }}</option>
-										{% for recurring in recurrings %}
-											<option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
-										{% endfor %}
-									</select>
-									<div class="help-block" id="recurring-description"></div>
-								</div>
-							{% endif %}
-							<div class="form-group form-horizontal">
-								<div class="form-group">
-									<div class="col-sm-12">
-										<div class="quantity">
-											<label class="control-label" for="input-quantity"></label>
-											<a class="counter counter-minus material-icons-remove" href="#"></a>
-											<input type="text" name="quantity" value="{{ minimum }}" size="2" id="input-quantity" class="form-control">
-											<input type="hidden" name="product_id" value="{{ product_id }}">
-											<a class="counter counter-plus material-icons-add" href="#"></a>
-										</div>
-										<br>
-										<button type="button" id="button-cart" data-loading-text="Loading..." class="btn btn-primary">Add to Cart</button>
+						{% endif %}
+						{% if recurrings %}
+							<hr>
+							<h3>{{ text_payment_recurring }}</h3>
+							<div class="form-group required">
+								<select name="recurring_id" class="form-control">
+									<option value="">{{ text_select }}</option>
+									{% for recurring in recurrings %}
+										<option value="{{ recurring.recurring_id }}">{{ recurring.name }}</option>
+									{% endfor %}
+								</select>
+								<div class="help-block" id="recurring-description"></div>
+							</div>
+						{% endif %}
+						<div class="form-group form-horizontal">
+							<div class="form-group">
+								<div class="col-sm-12">
+									<div class="quantity">
+										<label class="control-label" for="input-quantity"></label>
+										<a class="counter counter-minus material-icons-remove" href="#"></a>
+										<input type="text" name="quantity" value="{{ minimum }}" size="{{ minimum }}" id="input-quantity" class="form-control">
+										<input type="hidden" name="product_id" value="{{ product_id }}">
+										<a class="counter counter-plus material-icons-add" href="#"></a>
 									</div>
+									<br>
+									<button type="button" id="button-cart" data-loading-text="{{ text_loading }}" class="btn btn-primary" onclick="cart.add('{{ product_id }}');">{{ button_cart }}</button>
 								</div>
 							</div>
-							{% if minimum > 1 %}
-								<div class="alert alert-info">
-									<i class="fa fa-info-circle"></i>
-									{{ text_minimum }}</div>
-							{% endif %}
-							<div class="cart-button">
-								<button type="button" class="product-btn" onclick="wishlist.add('45');">
-									<i class="fa fa-heart-o"></i>
-									<span>Add to Wish List</span>
-								</button>
-								<button type="button" class="product-btn" onclick="compare.add('45');">
-									<i class="fa fa-balance-scale"></i>
-									<span>Compare this Product</span>
-								</button>
-							</div>
-
-							<div
-								class="product-share">
-								<!-- AddThis Button BEGIN -->
-								<div class="addthis_sharing_toolbox" data-url="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=45" data-title="100% Organic Pure Argan Oil" style="clear: both;">
-									<div id="atstbx" class="at-share-tbx-element addthis-smartlayers addthis-animated at4-show" aria-labelledby="at-60469e7e-c8db-41bf-9f63-23a4837e0b8d" role="region">
-										<span id="at-60469e7e-c8db-41bf-9f63-23a4837e0b8d" class="at4-visually-hidden">AddThis Sharing Buttons</span>
-										<div class="at-share-btn-elements">
-											<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-twitter" style="background-color: rgb(29, 161, 242); border-radius: 0%;">
-												<span class="at4-visually-hidden">Share to Twitter</span>
-												<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
-													<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-twitter-1" class="at-icon at-icon-twitter" style="width: 32px; height: 32px;">
-														<title id="at-svg-twitter-1">Twitter</title>
-														<g>
-															<path d="M27.996 10.116c-.81.36-1.68.602-2.592.71a4.526 4.526 0 0 0 1.984-2.496 9.037 9.037 0 0 1-2.866 1.095 4.513 4.513 0 0 0-7.69 4.116 12.81 12.81 0 0 1-9.3-4.715 4.49 4.49 0 0 0-.612 2.27 4.51 4.51 0 0 0 2.008 3.755 4.495 4.495 0 0 1-2.044-.564v.057a4.515 4.515 0 0 0 3.62 4.425 4.52 4.52 0 0 1-2.04.077 4.517 4.517 0 0 0 4.217 3.134 9.055 9.055 0 0 1-5.604 1.93A9.18 9.18 0 0 1 6 23.85a12.773 12.773 0 0 0 6.918 2.027c8.3 0 12.84-6.876 12.84-12.84 0-.195-.005-.39-.014-.583a9.172 9.172 0 0 0 2.252-2.336" fill-rule="evenodd"></path>
-														</g>
-													</svg>
-												</span>
-											</a>
-											<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-facebook" style="background-color: rgb(59, 89, 152); border-radius: 0%;">
-												<span class="at4-visually-hidden">Share to Facebook</span>
-												<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
-													<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-facebook-2" class="at-icon at-icon-facebook" style="width: 32px; height: 32px;">
-														<title id="at-svg-facebook-2">Facebook</title>
-														<g>
-															<path d="M22 5.16c-.406-.054-1.806-.16-3.43-.16-3.4 0-5.733 1.825-5.733 5.17v2.882H9v3.913h3.837V27h4.604V16.965h3.823l.587-3.913h-4.41v-2.5c0-1.123.347-1.903 2.198-1.903H22V5.16z" fill-rule="evenodd"></path>
-														</g>
-													</svg>
-												</span>
-											</a>
-											<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-vk" style="background-color: rgb(99, 131, 168); border-radius: 0%;">
-												<span class="at4-visually-hidden">Share to Vkontakte</span>
-												<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
-													<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-vk-3" class="at-icon at-icon-vk" style="width: 32px; height: 32px;">
-														<title id="at-svg-vk-3">Vkontakte</title>
-														<g>
-															<path d="M26.712 10.96s-.167-.48-1.21-.348l-3.447.024a.785.785 0 0 0-.455.072s-.204.108-.3.37a22.1 22.1 0 0 1-1.28 2.695c-1.533 2.61-2.156 2.754-2.407 2.587-.587-.372-.43-1.51-.43-2.323 0-2.54.382-3.592-.756-3.868-.37-.084-.646-.144-1.616-.156-1.232-.012-2.274 0-2.86.287-.396.193-.695.624-.515.648.227.036.742.143 1.017.515 0 0 .3.49.347 1.568.13 2.982-.48 3.353-.48 3.353-.466.252-1.28-.167-2.478-2.634 0 0-.694-1.222-1.233-2.563-.097-.25-.288-.383-.288-.383s-.216-.168-.527-.216l-3.28.024c-.504 0-.683.228-.683.228s-.18.19-.012.587c2.562 6.022 5.483 9.04 5.483 9.04s2.67 2.79 5.7 2.597h1.376c.418-.035.634-.263.634-.263s.192-.214.18-.61c-.024-1.843.838-2.12.838-2.12.838-.262 1.915 1.785 3.065 2.575 0 0 .874.6 1.532.467l3.064-.048c1.617-.01.85-1.352.85-1.352-.06-.108-.442-.934-2.286-2.647-1.916-1.784-1.665-1.496.658-4.585 1.413-1.88 1.976-3.03 1.796-3.52z" fill-rule="evenodd"></path>
-														</g>
-													</svg>
-												</span>
-											</a>
-											<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-compact" style="background-color: rgb(255, 101, 80); border-radius: 0%;">
-												<span class="at4-visually-hidden">Share to More</span>
-												<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
-													<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-addthis-4" class="at-icon at-icon-addthis" style="width: 32px; height: 32px;">
-														<title id="at-svg-addthis-4">AddThis</title>
-														<g>
-															<path d="M18 14V8h-4v6H8v4h6v6h4v-6h6v-4h-6z" fill-rule="evenodd"></path>
-														</g>
-													</svg>
-												</span>
-											</a>
-										</div>
-									</div>
-								</div>
-								<!-- Go to www.addthis.com/dashboard to customize your tools -->
-								<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-55e053ac02ebd38e" async="async"></script>
-								<!-- AddThis Button END -->
-							</div>
-
 						</div>
-					{% endif %}
+						{% if minimum > 1 %}
+							<div class="alert alert-info">
+								<i class="fa fa-info-circle"></i>
+								{{ text_minimum }}</div>
+						{% endif %}
+						<div class="cart-button">
+							<button type="button" class="product-btn" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product_id }}');">
+								<i class="fa fa-heart-o"></i>
+								<span>{{ button_wishlist }}</span>
+							</button>
+							<button type="button" class="product-btn" title="{{ button_compare }}" onclick="compare.add('{{ product_id }}');">
+								<i class="fa fa-balance-scale"></i>
+								<span>{{ button_compare }}</span>
+							</button>
+						</div>
+
+						<div
+							class="product-share">
+							<!-- AddThis Button BEGIN -->
+							<div class="addthis_sharing_toolbox" data-url="{{ share }}" data-title="{{ heading_title }}" style="clear: both;">
+								<div id="atstbx" class="at-share-tbx-element addthis-smartlayers addthis-animated at4-show" aria-labelledby="at-60469e7e-c8db-41bf-9f63-23a4837e0b8d" role="region">
+									<span id="at-60469e7e-c8db-41bf-9f63-23a4837e0b8d" class="at4-visually-hidden">AddThis Sharing Buttons</span>
+									<div class="at-share-btn-elements">
+										<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-twitter" style="background-color: rgb(29, 161, 242); border-radius: 0%;">
+											<span class="at4-visually-hidden">Share to Twitter</span>
+											<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
+												<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-twitter-1" class="at-icon at-icon-twitter" style="width: 32px; height: 32px;">
+													<title id="at-svg-twitter-1">Twitter</title>
+													<g>
+														<path d="M27.996 10.116c-.81.36-1.68.602-2.592.71a4.526 4.526 0 0 0 1.984-2.496 9.037 9.037 0 0 1-2.866 1.095 4.513 4.513 0 0 0-7.69 4.116 12.81 12.81 0 0 1-9.3-4.715 4.49 4.49 0 0 0-.612 2.27 4.51 4.51 0 0 0 2.008 3.755 4.495 4.495 0 0 1-2.044-.564v.057a4.515 4.515 0 0 0 3.62 4.425 4.52 4.52 0 0 1-2.04.077 4.517 4.517 0 0 0 4.217 3.134 9.055 9.055 0 0 1-5.604 1.93A9.18 9.18 0 0 1 6 23.85a12.773 12.773 0 0 0 6.918 2.027c8.3 0 12.84-6.876 12.84-12.84 0-.195-.005-.39-.014-.583a9.172 9.172 0 0 0 2.252-2.336" fill-rule="evenodd"></path>
+													</g>
+												</svg>
+											</span>
+										</a>
+										<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-facebook" style="background-color: rgb(59, 89, 152); border-radius: 0%;">
+											<span class="at4-visually-hidden">Share to Facebook</span>
+											<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
+												<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-facebook-2" class="at-icon at-icon-facebook" style="width: 32px; height: 32px;">
+													<title id="at-svg-facebook-2">Facebook</title>
+													<g>
+														<path d="M22 5.16c-.406-.054-1.806-.16-3.43-.16-3.4 0-5.733 1.825-5.733 5.17v2.882H9v3.913h3.837V27h4.604V16.965h3.823l.587-3.913h-4.41v-2.5c0-1.123.347-1.903 2.198-1.903H22V5.16z" fill-rule="evenodd"></path>
+													</g>
+												</svg>
+											</span>
+										</a>
+										<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-vk" style="background-color: rgb(99, 131, 168); border-radius: 0%;">
+											<span class="at4-visually-hidden">Share to Vkontakte</span>
+											<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
+												<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-vk-3" class="at-icon at-icon-vk" style="width: 32px; height: 32px;">
+													<title id="at-svg-vk-3">Vkontakte</title>
+													<g>
+														<path d="M26.712 10.96s-.167-.48-1.21-.348l-3.447.024a.785.785 0 0 0-.455.072s-.204.108-.3.37a22.1 22.1 0 0 1-1.28 2.695c-1.533 2.61-2.156 2.754-2.407 2.587-.587-.372-.43-1.51-.43-2.323 0-2.54.382-3.592-.756-3.868-.37-.084-.646-.144-1.616-.156-1.232-.012-2.274 0-2.86.287-.396.193-.695.624-.515.648.227.036.742.143 1.017.515 0 0 .3.49.347 1.568.13 2.982-.48 3.353-.48 3.353-.466.252-1.28-.167-2.478-2.634 0 0-.694-1.222-1.233-2.563-.097-.25-.288-.383-.288-.383s-.216-.168-.527-.216l-3.28.024c-.504 0-.683.228-.683.228s-.18.19-.012.587c2.562 6.022 5.483 9.04 5.483 9.04s2.67 2.79 5.7 2.597h1.376c.418-.035.634-.263.634-.263s.192-.214.18-.61c-.024-1.843.838-2.12.838-2.12.838-.262 1.915 1.785 3.065 2.575 0 0 .874.6 1.532.467l3.064-.048c1.617-.01.85-1.352.85-1.352-.06-.108-.442-.934-2.286-2.647-1.916-1.784-1.665-1.496.658-4.585 1.413-1.88 1.976-3.03 1.796-3.52z" fill-rule="evenodd"></path>
+													</g>
+												</svg>
+											</span>
+										</a>
+										<a role="button" tabindex="0" class="at-icon-wrapper at-share-btn at-svc-compact" style="background-color: rgb(255, 101, 80); border-radius: 0%;">
+											<span class="at4-visually-hidden">Share to More</span>
+											<span class="at-icon-wrapper" style="line-height: 32px; height: 32px; width: 32px;">
+												<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 32 32" version="1.1" role="img" aria-labelledby="at-svg-addthis-4" class="at-icon at-icon-addthis" style="width: 32px; height: 32px;">
+													<title id="at-svg-addthis-4">AddThis</title>
+													<g>
+														<path d="M18 14V8h-4v6H8v4h6v6h4v-6h6v-4h-6z" fill-rule="evenodd"></path>
+													</g>
+												</svg>
+											</span>
+										</a>
+									</div>
+								</div>
+							</div>
+							<!-- Go to www.addthis.com/dashboard to customize your tools -->
+							<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-55e053ac02ebd38e" async="async"></script>
+							<!-- AddThis Button END -->
+						</div>
+
+					</div>
 				</div>
 			</div>
 			<div class="product_tabs">
 				<ul class="nav nav-tabs">
 					<li class="active">
-						<a href="#tab-description" data-toggle="tab">
-							Description
-						</a>
+						<a href="#tab-description" data-toggle="tab">{{ tab_description }}</a>
 					</li>
-					<li>
-						<a href="#tab-specification" data-toggle="tab">
-							Additional Info
-						</a>
-					</li>
-
-					<li>
-						<a href="#tab-review" data-toggle="tab">
-							Reviews
-						</a>
-					</li>
-					<li>
-						<a href="#tab-video" data-toggle="tab">
-							Video
-						</a>
-					</li>
+					{% if attribute_groups %}
+						<li>
+							<a href="#tab-specification" data-toggle="tab">{{ tab_attribute }}</a>
+						</li>
+					{% endif %}
+					{% if review_status %}
+						<li>
+							<a href="#tab-review" data-toggle="tab">{{ tab_review }}</a>
+						</li>
+					{% endif %}
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane active" id="tab-description">
-
-						<p>Our company advocates the postulate that the health is the biggest value in our lives. The point is that science and nature are easily combined in products that we are glad to offer you today. Our goal is to help you stay healthy as well as gorgeous at the same time. Soon you’ll discover how it is possible to use organic cosmetics for your body.
-						</p>
-						<p>You can shop with the confidence that you are in the place which has over twenty years of experience in organic cosmetics industry. We’ve collected all our knowledge to deliver you only the best organic, biodynamic,
-							<b>natural</b>, wild-harvested cosmetology brands in the world.</p>
-						<p>Also you can always contact our consultants that are always glad to provide you with full information about our goods and natural products that are used in the process of production of
-							<b>organic cosmetics</b>. Our goal is to satisfy all our clients despite of their age, gender and race with premium, modern, effective alternatives to conventional beauty products.</p>
-					</div>
-					<div class="tab-pane" id="tab-specification">
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<td colspan="2">
-										<strong>Product Details</strong>
-									</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Not tested for animals</td>
-									<td>Yes</td>
-								</tr>
-								<tr>
-									<td>Dermatologist approved</td>
-									<td>Yes</td>
-								</tr>
-							</tbody>
-							<thead>
-								<tr>
-									<td colspan="2">
-										<strong>Benefits</strong>
-									</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Moisturising</td>
-									<td>Yes</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="tab-pane product-reviews" id="tab-review">
-						<form class="form-horizontal" id="form-review">
-							<div id="review">
-								<p>There are no reviews for this product.</p>
-
-							</div>
-							<div class="review-form-title">
-								<span class="btn-primary close-tab" id="reviews_form_title">Write a review</span>
-							</div>
-							<div class="product-review-form" id="reviews_form">
-								<div class="form-group required">
-									<div class="col-sm-18">
-										<label class="control-label" for="input-name">Your Name</label>
-										<input type="text" name="name" value="" id="input-name" class="form-control">
-									</div>
-								</div>
-								<div class="form-group required">
-									<div class="col-sm-18">
-										<label class="control-label" for="input-review">Your Review</label>
-										<textarea name="text" rows="5" id="input-review" class=""></textarea>
-										<div class="help-block">
-											<span class="text-danger">Note:</span>
-											HTML is not translated!</div>
-									</div>
-								</div>
-								<div class="form-group required">
-									<div class="col-sm-18">
-										<label class="control-label">Rating</label>
-										&nbsp;&nbsp;&nbsp; Bad&nbsp;
-										<input type="radio" name="rating" value="1">
-										&nbsp;
-										<input type="radio" name="rating" value="2">
-										&nbsp;
-										<input type="radio" name="rating" value="3">
-										&nbsp;
-										<input type="radio" name="rating" value="4">
-										&nbsp;
-										<input type="radio" name="rating" value="5">
-										&nbsp;Good
-									</div>
-								</div>
-
-								<div class="buttons clearfix">
-									<div class="pull-right">
-										<button type="button" id="button-review" data-loading-text="Loading..." class="btn btn-primary">Continue</button>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div id="tab-video" class="tab-pane product-video product-section">
-						<div class="r_frame">
-							<iframe src="//www.youtube.com/embed/6vt5JuQfafo?Rel=0&amp;controls=0&amp;showinfo=0&amp;wmode=transparent" allowfullscreen="" height="315" width="560"></iframe>
+					<div class="tab-pane active" id="tab-description">{{ description }}</div>
+					{% if attribute_groups %}
+						<div class="tab-pane" id="tab-specification">
+							<table class="table table-bordered">
+								{% for attribute_group in attribute_groups %}
+									<thead>
+										<tr>
+											<td colspan="2">
+												<strong>{{ attribute_group.name }}</strong>
+											</td>
+										</tr>
+									</thead>
+									<tbody>
+										{% for attribute in attribute_group.attribute %}
+											<tr>
+												<td>{{ attribute.name }}</td>
+												<td>{{ attribute.text }}</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								{% endfor %}
+							</table>
 						</div>
-						<div class="clearfix"></div>
-					</div>
+					{% endif %}
+					{% if review_status %}
+						<div class="tab-pane product-reviews" id="tab-review">
+							<form class="form-horizontal" id="form-review">
+								<div id="review"></div>
+								<h2>{{ text_write }}</h2>
+								{% if review_guest %}
+									<div class="form-group required">
+										<div class="col-sm-12">
+											<label class="control-label" for="input-name">{{ entry_name }}</label>
+											<input type="text" name="name" value="{{ customer_name }}" id="input-name" class="form-control">
+										</div>
+									</div>
+									<div class="form-group required">
+										<div class="col-sm-12">
+											<label class="control-label" for="input-review">{{ entry_review }}</label>
+											<textarea name="text" rows="5" id="input-review" class="form-control"></textarea>
+											<div class="help-block">{{ text_note }}</div>
+										</div>
+									</div>
+									<div class="form-group required">
+										<div class="col-sm-12">
+											<label class="control-label">{{ entry_rating }}</label>
+											&nbsp;&nbsp;&nbsp;
+											{{ entry_bad }}&nbsp;
+											<input type="radio" name="rating" value="1">
+											&nbsp;
+											<input type="radio" name="rating" value="2">
+											&nbsp;
+											<input type="radio" name="rating" value="3">
+											&nbsp;
+											<input type="radio" name="rating" value="4">
+											&nbsp;
+											<input type="radio" name="rating" value="5">
+											&nbsp;Good
+										</div>
+									</div>
+									{{ captcha }}
+									<div class="buttons clearfix">
+										<div class="pull-right">
+											<button type="button" id="button-review" data-loading-text="{{ text_loading }}" class="btn btn-primary">{{ button_continue }}</button>
+										</div>
+									</div>
+								{% else %}
+									{{ text_login }}
+								{% endif %}
+							</form>
+						</div>
+					{% endif %}
 				</div>
 			</div>
-			<!-- related Products -->
-			<div class="box related-block">
-				<div class="box-heading">
-					<h3>Other products</h3>
-					<div id="nav_related">
-						<div class="swiper-button-prev swiper-button-disabled"></div>
-						<div class="swiper-button-next"></div>
-					</div>
-				</div>
-				<div class="swiper-container swiper-container-horizontal" data-box-carousel="" data-carousel-settings="items: 6, space: 30" data-nav-id="related">
-					<div class="swiper-wrapper">
-
-						<div class="swiper-slide swiper-slide-active" style="width: 170px; margin-right: 30px;">
-							<div class="product-thumb transition  options ">
-								<div class="product-option-wrap">
-									<div class="product-options form-horizontal">
-										<div class="options">
-											<a class="ajax-overlay_close" href="#"></a>
-											<h3>Available Options</h3>
-											<div class="form-group hidden">
-												<div class="col-sm-8">
-													<input type="text" name="product_id" value="28" class="form-control">
-												</div>
-											</div>
-
-
-											<div class="form-group required">
-												<label class="control-label col-sm-18" for="input-option14000">
-													Size
-												</label>
-												<div class="col-sm-18">
-													<div id="sbHolder_26807464" class="sbHolder">
-														<a id="sbToggle_26807464" href="#" class="sbToggle"></a>
-														<a id="sbSelector_26807464" href="#" class="sbSelector">--- Please Select ---</a>
-														<ul id="sbOptions_26807464" class="sbOptions" style="display: none;">
-															<li>
-																<a href="#" rel="" class="sbFocus">--- Please Select ---</a>
-															</li>
-															<li>
-																<a href="#1" rel="1">
-																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
-																</a>
-															</li>
-															<li>
-																<a href="#2" rel="2">
-																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
-																</a>
-															</li>
-															<li>
-																<a href="#3" rel="3">
-																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
-																</a>
-															</li>
-														</ul>
-													</div>
-													<select name="option[1]" id="input-option14000" class="" sb="26807464" style="display: none;">
-														<option value="">--- Please Select ---</option>
-
-														<option value="1">
-															1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
-														</option>
-
-														<option value="2">
-															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
-														</option>
-
-														<option value="3">
-															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
-														</option>
-
-													</select>
-												</div>
-											</div>
-
-
-											<div class="form-group option-color  required">
-												<label class="control-label col-sm-18">Color</label>
-												<div class="col-sm-18">
-													<div id="input-option24000">
-
-
-														<div class="radio">
-															<input type="radio" name="option[2]" value="5" id="option[2]5"><label for="option[2]5">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/black-50x50.png" alt=" +$20.00" class="img-thumbnail" data-original-title="black (+$20.00) ">
-															</label>
-														</div>
-
-
-														<div class="radio">
-															<input type="radio" name="option[2]" value="6" id="option[2]6"><label for="option[2]6">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/white-50x50.png" alt=" +$15.00" class="img-thumbnail" data-original-title="white (+$15.00) ">
-															</label>
-														</div>
-
-
-														<div class="radio">
-															<input type="radio" name="option[2]" value="4" id="option[2]4"><label for="option[2]4">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/red-50x50.png" alt=" +$10.00" class="img-thumbnail" data-original-title="red (+$10.00) ">
-															</label>
-														</div>
-
-
-													</div>
-												</div>
-											</div>
-
-
-											<button class="btn-primary" type="button" onclick="cart.addPopup($(this),'28');">Add to Cart</button>
-										</div>
-									</div>
-								</div>
-								<div class="image">
-									<a class="lazy" href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=28" style="padding-bottom: 121.48148148148%">
-										<img width="270" height="328" alt="Container is Perfect for Oils" title="Container is Perfect for Oils" class="img-primary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-1-270x328.png" src="#">
-										<img width="270" height="328" alt="Container is Perfect for Oils" title="Container is Perfect for Oils" class="img-secondary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-2-270x328.png" src="#">
-									</a>
-
-									<div class="discount">
-										<span>-20%</span>
-									</div>
-
-
-									<button class="btn-primary quickview" type="button" data-rel="details" data-product="28">Quick View</button>
-
-								</div>
-
-								<div class="caption">
-									<div class="name">
-										<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=28">Container is Perfect for Oils</a>
-									</div>
-									<div class="rating">
-										<span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star-o fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star-o fa-stack-1x"></i>
-											</span>
-										</span>
-									</div>
-									<p class="price">
-										<span class="price-new">$8.00</span>
-										<span class="price-old">$10.00</span>
-									</p>
-								</div>
-								<div class="cart-button">
-									<button type="button" class="btn-icon" onclick="ajaxAdd($(this),28);">
-										<i class="fl-puppets-market1"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('28');" data-original-title="Add to Wish List">
-										<i class="fa fa-heart-o"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('28');" data-original-title="Compare this Product">
-										<i class="fa fa-balance-scale"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-
-						<div class="swiper-slide swiper-slide-next" style="width: 170px; margin-right: 30px;">
-							<div class="product-thumb transition  options ">
-								<div class="product-option-wrap">
-									<div class="product-options form-horizontal">
-										<div class="options">
-											<a class="ajax-overlay_close" href="#"></a>
-											<h3>Available Options</h3>
-											<div class="form-group hidden">
-												<div class="col-sm-8">
-													<input type="text" name="product_id" value="30" class="form-control">
-												</div>
-											</div>
-
-
-											<div class="form-group required">
-												<label class="control-label col-sm-18" for="input-option54001">
-													Size
-												</label>
-												<div class="col-sm-18">
-													<div id="sbHolder_44039648" class="sbHolder">
-														<a id="sbToggle_44039648" href="#" class="sbToggle"></a>
-														<a id="sbSelector_44039648" href="#" class="sbSelector">--- Please Select ---</a>
-														<ul id="sbOptions_44039648" class="sbOptions" style="display: none;">
-															<li>
-																<a href="#" rel="" class="sbFocus">--- Please Select ---</a>
-															</li>
-															<li>
-																<a href="#11" rel="11">
-																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
-																</a>
-															</li>
-															<li>
-																<a href="#12" rel="12">
-																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
-																</a>
-															</li>
-															<li>
-																<a href="#13" rel="13">
-																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
-																</a>
-															</li>
-														</ul>
-													</div>
-													<select name="option[5]" id="input-option54001" class="" sb="44039648" style="display: none;">
-														<option value="">--- Please Select ---</option>
-
-														<option value="11">
-															1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
-														</option>
-
-														<option value="12">
-															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
-														</option>
-
-														<option value="13">
-															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
-														</option>
-
-													</select>
-												</div>
-											</div>
-
-
-											<div class="form-group option-color  required">
-												<label class="control-label col-sm-18">Color</label>
-												<div class="col-sm-18">
-													<div id="input-option64001">
-
-
-														<div class="radio">
-															<input type="radio" name="option[6]" value="16" id="option[6]16"><label for="option[6]16">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/black-50x50.png" alt=" +$10.00" class="img-thumbnail" data-original-title="black (+$10.00) ">
-															</label>
-														</div>
-
-
-														<div class="radio">
-															<input type="radio" name="option[6]" value="15" id="option[6]15"><label for="option[6]15">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/black-50x50.png" alt=" +$15.00" class="img-thumbnail" data-original-title="black (+$15.00) ">
-															</label>
-														</div>
-
-
-														<div class="radio">
-															<input type="radio" name="option[6]" value="14" id="option[6]14"><label for="option[6]14">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/red-50x50.png" alt=" +$20.00" class="img-thumbnail" data-original-title="red (+$20.00) ">
-															</label>
-														</div>
-
-
-													</div>
-												</div>
-											</div>
-
-
-											<button class="btn-primary" type="button" onclick="cart.addPopup($(this),'30');">Add to Cart</button>
-										</div>
-									</div>
-								</div>
-								<div class="image">
-									<a class="lazy" href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=30" style="padding-bottom: 121.48148148148%">
-										<img width="270" height="328" alt="Organics Thickening Shampoo " title="Organics Thickening Shampoo " class="img-primary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-7-270x328.png" src="#">
-										<img width="270" height="328" alt="Organics Thickening Shampoo " title="Organics Thickening Shampoo " class="img-secondary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-9-270x328.png" src="#">
-									</a>
-
-									<div class="discount">
-										<span>-20%</span>
-									</div>
-
-
-									<button class="btn-primary quickview" type="button" data-rel="details" data-product="30">Quick View</button>
-
-								</div>
-
-								<div class="caption">
-									<div class="name">
-										<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=30">Organics Thickening Shampoo
-										</a>
-									</div>
-									<div class="rating">
-										<span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star-o fa-stack-1x"></i>
-											</span>
-										</span>
-									</div>
-									<p class="price">
-										<span class="price-new">$9.60</span>
-										<span class="price-old">$12.00</span>
-									</p>
-								</div>
-								<div class="cart-button">
-									<button type="button" class="btn-icon" onclick="ajaxAdd($(this),30);">
-										<i class="fl-puppets-market1"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('30');" data-original-title="Add to Wish List">
-										<i class="fa fa-heart-o"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('30');" data-original-title="Compare this Product">
-										<i class="fa fa-balance-scale"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-
-						<div class="swiper-slide" style="width: 170px; margin-right: 30px;">
-							<div class="product-thumb transition  options ">
-								<div class="product-option-wrap">
-									<div class="product-options form-horizontal">
-										<div class="options">
-											<a class="ajax-overlay_close" href="#"></a>
-											<h3>Available Options</h3>
-											<div class="form-group hidden">
-												<div class="col-sm-8">
-													<input type="text" name="product_id" value="33" class="form-control">
-												</div>
-											</div>
-
-
-											<div class="form-group required">
-												<label class="control-label col-sm-18">
-													Skin Type
-												</label>
-												<div class="col-sm-18">
-													<div id="input-option114002">
-
-														<div class="checkbox">
-															<input type="checkbox" name="option[11][]" value="25" id="option[11][]25"><label for="option[11][]25">
-
-																Oily 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
-															</label>
-														</div>
-
-														<div class="checkbox">
-															<input type="checkbox" name="option[11][]" value="26" id="option[11][]26"><label for="option[11][]26">
-
-																Dry 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$15.00)
-															</label>
-														</div>
-
-													</div>
-												</div>
-											</div>
-
-
-											<button class="btn-primary" type="button" onclick="cart.addPopup($(this),'33');">Add to Cart</button>
-										</div>
-									</div>
-								</div>
-								<div class="image">
-									<a class="lazy" href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=33" style="padding-bottom: 121.48148148148%">
-										<img width="270" height="328" alt="Virgin Organic Coconut Oil" title="Virgin Organic Coconut Oil" class="img-primary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-16-270x328.png" src="#">
-										<img width="270" height="328" alt="Virgin Organic Coconut Oil" title="Virgin Organic Coconut Oil" class="img-secondary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-18-270x328.png" src="#">
-									</a>
-
-									<div class="discount">
-										<span>-20%</span>
-									</div>
-
-
-									<button class="btn-primary quickview" type="button" data-rel="details" data-product="33">Quick View</button>
-
-								</div>
-
-								<div class="caption">
-									<div class="name">
-										<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=33">Virgin Organic Coconut Oil</a>
-									</div>
-									<div class="rating">
-										<span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star-o fa-stack-1x"></i>
-											</span>
-										</span>
-									</div>
-									<p class="price">
-										<span class="price-new">$28.00</span>
-										<span class="price-old">$35.00</span>
-									</p>
-								</div>
-								<div class="cart-button">
-									<button type="button" class="btn-icon" onclick="ajaxAdd($(this),33);">
-										<i class="fl-puppets-market1"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('33');" data-original-title="Add to Wish List">
-										<i class="fa fa-heart-o"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('33');" data-original-title="Compare this Product">
-										<i class="fa fa-balance-scale"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-
-						<div class="swiper-slide" style="width: 170px; margin-right: 30px;">
-							<div class="product-thumb transition  options ">
-								<div class="product-option-wrap">
-									<div class="product-options form-horizontal">
-										<div class="options">
-											<a class="ajax-overlay_close" href="#"></a>
-											<h3>Available Options</h3>
-											<div class="form-group hidden">
-												<div class="col-sm-8">
-													<input type="text" name="product_id" value="35" class="form-control">
-												</div>
-											</div>
-
-
-											<div class="form-group required">
-												<label class="control-label col-sm-18">
-													Skin Type
-												</label>
-												<div class="col-sm-18">
-													<div id="input-option144003">
-
-														<div class="checkbox">
-															<input type="checkbox" name="option[14][]" value="31" id="option[14][]31"><label for="option[14][]31">
-
-																Oily 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
-															</label>
-														</div>
-
-														<div class="checkbox">
-															<input type="checkbox" name="option[14][]" value="32" id="option[14][]32"><label for="option[14][]32">
-
-																Dry 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$15.00)
-															</label>
-														</div>
-
-														<div class="checkbox">
-															<input type="checkbox" name="option[14][]" value="33" id="option[14][]33"><label for="option[14][]33">
-
-																Combination 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                        (+$10.00)
-															</label>
-														</div>
-
-													</div>
-												</div>
-											</div>
-
-
-											<div class="form-group required">
-												<label class="control-label col-sm-18" for="input-option154003">
-													Size
-												</label>
-												<div class="col-sm-18">
-													<div id="sbHolder_83649370" class="sbHolder">
-														<a id="sbToggle_83649370" href="#" class="sbToggle"></a>
-														<a id="sbSelector_83649370" href="#" class="sbSelector">--- Please Select ---</a>
-														<ul id="sbOptions_83649370" class="sbOptions" style="display: none;">
-															<li>
-																<a href="#" rel="" class="sbFocus">--- Please Select ---</a>
-															</li>
-															<li>
-																<a href="#34" rel="34">
-																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$5.00)
-																</a>
-															</li>
-															<li>
-																<a href="#35" rel="35">
-																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
-																</a>
-															</li>
-															<li>
-																<a href="#36" rel="36">
-																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
-																</a>
-															</li>
-														</ul>
-													</div>
-													<select name="option[15]" id="input-option154003" class="" sb="83649370" style="display: none;">
-														<option value="">--- Please Select ---</option>
-
-														<option value="34">
-															1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$5.00)
-														</option>
-
-														<option value="35">
-															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
-														</option>
-
-														<option value="36">
-															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
-														</option>
-
-													</select>
-												</div>
-											</div>
-
-
-											<div class="form-group option-color  required">
-												<label class="control-label col-sm-18">Color</label>
-												<div class="col-sm-18">
-													<div id="input-option164003">
-
-
-														<div class="radio">
-															<input type="radio" name="option[16]" value="38" id="option[16]38"><label for="option[16]38">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/black-50x50.png" alt=" +$15.00" class="img-thumbnail" data-original-title="black (+$15.00) ">
-															</label>
-														</div>
-
-
-														<div class="radio">
-															<input type="radio" name="option[16]" value="39" id="option[16]39"><label for="option[16]39">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/white-50x50.png" alt=" +$20.00" class="img-thumbnail" data-original-title="white (+$20.00) ">
-															</label>
-														</div>
-
-
-														<div class="radio">
-															<input type="radio" name="option[16]" value="37" id="option[16]37"><label for="option[16]37">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/red-50x50.png" alt=" +$10.00" class="img-thumbnail" data-original-title="red (+$10.00) ">
-															</label>
-														</div>
-
-
-													</div>
-												</div>
-											</div>
-
-
-											<button class="btn-primary" type="button" onclick="cart.addPopup($(this),'35');">Add to Cart</button>
-										</div>
-									</div>
-								</div>
-								<div class="image">
-									<a class="lazy" href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=35" style="padding-bottom: 121.48148148148%">
-										<img width="270" height="328" alt="Bearberry Eye Repair Cream " title="Bearberry Eye Repair Cream " class="img-primary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-22-270x328.png" src="#">
-										<img width="270" height="328" alt="Bearberry Eye Repair Cream " title="Bearberry Eye Repair Cream " class="img-secondary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-24-270x328.png" src="#">
-									</a>
-
-
-									<button class="btn-primary quickview" type="button" data-rel="details" data-product="35">Quick View</button>
-
-								</div>
-
-								<div class="caption">
-									<div class="name">
-										<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=35">Bearberry Eye Repair Cream
-										</a>
-									</div>
-									<div class="rating">
-										<span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star-o fa-stack-1x"></i>
-											</span>
-										</span>
-									</div>
-									<p class="price">
-										$50.00
-									</p>
-								</div>
-								<div class="cart-button">
-									<button type="button" class="btn-icon" onclick="ajaxAdd($(this),35);">
-										<i class="fl-puppets-market1"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('35');" data-original-title="Add to Wish List">
-										<i class="fa fa-heart-o"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('35');" data-original-title="Compare this Product">
-										<i class="fa fa-balance-scale"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-
-						<div class="swiper-slide" style="width: 170px; margin-right: 30px;">
-							<div class="product-thumb transition  options ">
-								<div class="product-option-wrap">
-									<div class="product-options form-horizontal">
-										<div class="options">
-											<a class="ajax-overlay_close" href="#"></a>
-											<h3>Available Options</h3>
-											<div class="form-group hidden">
-												<div class="col-sm-8">
-													<input type="text" name="product_id" value="41" class="form-control">
-												</div>
-											</div>
-
-
-											<div class="form-group required">
-												<label class="control-label col-sm-18" for="input-option214004">
-													Size
-												</label>
-												<div class="col-sm-18">
-													<div id="sbHolder_75709811" class="sbHolder">
-														<a id="sbToggle_75709811" href="#" class="sbToggle"></a>
-														<a id="sbSelector_75709811" href="#" class="sbSelector">--- Please Select ---</a>
-														<ul id="sbOptions_75709811" class="sbOptions" style="display: none;">
-															<li>
-																<a href="#" rel="" class="sbFocus">--- Please Select ---</a>
-															</li>
-															<li>
-																<a href="#52" rel="52">
-																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
-																</a>
-															</li>
-															<li>
-																<a href="#53" rel="53">
-																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
-																</a>
-															</li>
-															<li>
-																<a href="#54" rel="54">
-																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
-																</a>
-															</li>
-														</ul>
-													</div>
-													<select name="option[21]" id="input-option214004" class="" sb="75709811" style="display: none;">
-														<option value="">--- Please Select ---</option>
-
-														<option value="52">
-															1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
-														</option>
-
-														<option value="53">
-															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
-														</option>
-
-														<option value="54">
-															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
-														</option>
-
-													</select>
-												</div>
-											</div>
-
-
-											<button class="btn-primary" type="button" onclick="cart.addPopup($(this),'41');">Add to Cart</button>
-										</div>
-									</div>
-								</div>
-								<div class="image">
-									<a class="lazy" href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=41" style="padding-bottom: 121.48148148148%">
-										<img width="270" height="328" alt="Green Tea Volumizing Mascara" title="Green Tea Volumizing Mascara" class="img-primary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-31-270x328.png" src="#">
-										<img width="270" height="328" alt="Green Tea Volumizing Mascara" title="Green Tea Volumizing Mascara" class="img-secondary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-33-270x328.png" src="#">
-									</a>
-
-									<div class="discount">
-										<span>-20%</span>
-									</div>
-
-
-									<button class="btn-primary quickview" type="button" data-rel="details" data-product="41">Quick View</button>
-
-								</div>
-
-								<div class="caption">
-									<div class="name">
-										<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=41">Green Tea Volumizing Mascara</a>
-									</div>
-									<p class="price">
-										<span class="price-new">$32.00</span>
-										<span class="price-old">$40.00</span>
-									</p>
-								</div>
-								<div class="cart-button">
-									<button type="button" class="btn-icon" onclick="ajaxAdd($(this),41);">
-										<i class="fl-puppets-market1"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('41');" data-original-title="Add to Wish List">
-										<i class="fa fa-heart-o"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('41');" data-original-title="Compare this Product">
-										<i class="fa fa-balance-scale"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-
-						<div class="swiper-slide" style="width: 170px; margin-right: 30px;">
-							<div class="product-thumb transition ">
-								<div class="image">
-									<a class="lazy" href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=42" style="padding-bottom: 121.48148148148%">
-										<img width="270" height="328" alt="Anti Aging Facial Mud Mask" title="Anti Aging Facial Mud Mask" class="img-primary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-34-270x328.png" src="#">
-										<img width="270" height="328" alt="Anti Aging Facial Mud Mask" title="Anti Aging Facial Mud Mask" class="img-secondary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-36-270x328.png" src="#">
-									</a>
-
-									<div class="discount">
-										<span>-20%</span>
-									</div>
-
-
-									<button class="btn-primary quickview" type="button" data-rel="details" data-product="42">Quick View</button>
-
-								</div>
-
-								<div class="caption">
-									<div class="name">
-										<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=42">Anti Aging Facial Mud Mask</a>
-									</div>
-									<p class="price">
-										<span class="price-new">$48.00</span>
-										<span class="price-old">$60.00</span>
-									</p>
-								</div>
-								<div class="cart-button">
-									<button type="button" class="btn-icon" onclick="cart.add('42');">
-										<i class="fl-puppets-market1"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('42');" data-original-title="Add to Wish List">
-										<i class="fa fa-heart-o"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('42');" data-original-title="Compare this Product">
-										<i class="fa fa-balance-scale"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-
-						<div class="swiper-slide" style="width: 170px; margin-right: 30px;">
-							<div class="product-thumb transition  options ">
-								<div class="product-option-wrap">
-									<div class="product-options form-horizontal">
-										<div class="options">
-											<a class="ajax-overlay_close" href="#"></a>
-											<h3>Available Options</h3>
-											<div class="form-group hidden">
-												<div class="col-sm-8">
-													<input type="text" name="product_id" value="47" class="form-control">
-												</div>
-											</div>
-
-
-											<div class="form-group required">
-												<label class="control-label col-sm-18" for="input-option334006">
-													Size
-												</label>
-												<div class="col-sm-18">
-													<div id="sbHolder_41808598" class="sbHolder">
-														<a id="sbToggle_41808598" href="#" class="sbToggle"></a>
-														<a id="sbSelector_41808598" href="#" class="sbSelector">--- Please Select ---</a>
-														<ul id="sbOptions_41808598" class="sbOptions" style="display: none;">
-															<li>
-																<a href="#" rel="" class="sbFocus">--- Please Select ---</a>
-															</li>
-															<li>
-																<a href="#75" rel="75">
-																	1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$20.00)
-																</a>
-															</li>
-															<li>
-																<a href="#76" rel="76">
-																	3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$15.00)
-																</a>
-															</li>
-															<li>
-																<a href="#77" rel="77">
-																	8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                                            (+$10.00)
-																</a>
-															</li>
-														</ul>
-													</div>
-													<select name="option[33]" id="input-option334006" class="" sb="41808598" style="display: none;">
-														<option value="">--- Please Select ---</option>
-
-														<option value="75">
-															1 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$20.00)
-														</option>
-
-														<option value="76">
-															3.3 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$15.00)
-														</option>
-
-														<option value="77">
-															8.4 fl. Oz 
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																                                                                                                                                                                            (+$10.00)
-														</option>
-
-													</select>
-												</div>
-											</div>
-
-
-											<div class="form-group option-color  required">
-												<label class="control-label col-sm-18">Color</label>
-												<div class="col-sm-18">
-													<div id="input-option344006">
-
-
-														<div class="radio">
-															<input type="radio" name="option[34]" value="95" id="option[34]95"><label for="option[34]95">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/white-50x50.png" alt=" +" class="img-thumbnail" data-original-title="white">
-															</label>
-														</div>
-
-
-														<div class="radio">
-															<input type="radio" name="option[34]" value="78" id="option[34]78"><label for="option[34]78">
-
-																<img width="21" height="21" data-toggle="tooltip" title="" src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/options/red-50x50.png" alt=" +$10.00" class="img-thumbnail" data-original-title="red (+$10.00) ">
-															</label>
-														</div>
-
-
-													</div>
-												</div>
-											</div>
-
-
-											<button class="btn-primary" type="button" onclick="cart.addPopup($(this),'47');">Add to Cart</button>
-										</div>
-									</div>
-								</div>
-								<div class="image">
-									<a class="lazy" href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=47" style="padding-bottom: 121.48148148148%">
-										<img width="270" height="328" alt="Serumtologie C serum 22" title="Serumtologie C serum 22" class="img-primary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-49-270x328.png" src="#">
-										<img width="270" height="328" alt="Serumtologie C serum 22" title="Serumtologie C serum 22" class="img-secondary" data-src="https://livedemo00-opencart.template-help.com/opencart_prod-23519/image/cache/catalog/products/product-51-270x328.png" src="#">
-									</a>
-
-									<div class="discount">
-										<span>-20%</span>
-									</div>
-
-
-									<button class="btn-primary quickview" type="button" data-rel="details" data-product="47">Quick View</button>
-
-								</div>
-
-								<div class="caption">
-									<div class="name">
-										<a href="https://livedemo00-opencart.template-help.com/opencart_prod-23519/index.php?route=product/product&amp;product_id=47">Serumtologie C serum 22</a>
-									</div>
-									<div class="rating">
-										<span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star fa-stack-1x"></i>
-											</span>
-											<span class="fa-stack">
-												<i class="fa fa-star-o fa-stack-1x"></i>
-											</span>
-										</span>
-									</div>
-									<p class="price">
-										<span class="price-new">$56.00</span>
-										<span class="price-old">$70.00</span>
-									</p>
-								</div>
-								<div class="cart-button">
-									<button type="button" class="btn-icon" onclick="ajaxAdd($(this),47);">
-										<i class="fl-puppets-market1"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('47');" data-original-title="Add to Wish List">
-										<i class="fa fa-heart-o"></i>
-									</button>
-									<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('47');" data-original-title="Compare this Product">
-										<i class="fa fa-balance-scale"></i>
-									</button>
-								</div>
-							</div>
+			{% if products %}
+				<div class="box related-block">
+					<div class="box-heading">
+						<h3>{{ text_related }}</h3>
+						<div id="nav_related">
+							<div class="swiper-button-prev swiper-button-disabled"></div>
+							<div class="swiper-button-next swiper-button-disabled"></div>
 						</div>
 					</div>
-				</div>
-			</div>
+					<div class="swiper-container swiper-container-horizontal" data-box-carousel data-carousel-settings="items: 6, space: 30" data-nav-id="related">
+						{% set i = 0 %}
+						{% for product in products %}
+							{% if i == 0 %}
+								{% set class = 'swiper-slide-active' %}
+							{% else %}
+								{% set class = '' %}
+							{% endif %}
+							<div class="swiper-slide {{ class }}" style="width: 170px; margin-right: 30px;">
+								<div class="product-thumb transition options">
+									<div class="product-option-wrap">
+										<div class="product-options form-horizontal">
+											<div class="options">
+												<a class="ajax-overlay_close" href="#"></a>
+												{% if options %}
+													<h3>{{ text_option }}</h3>
+													{% for option in options %}
+														{% if option.type == 'select' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+																<select name="option[{{ option.product_option_id }}]" id="input-option{{ option.product_option_id }}" class="form-control">
+																	<option value="">{{ text_select }}</option>
+																	{% for option_value in option.product_option_value %}
+																		<option value="{{ option_value.product_option_value_id }}">{{ option_value.name }}
+																			{% if option_value.price %}
+																				({{ option_value.price_prefix }}{{ option_value.price }})
+																			{% endif %}
+																		</option>
+																	{% endfor %}
+																</select>
+															</div>
+														{% endif %}
+														{% if option.type == 'radio' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label">{{ option.name }}</label>
+																<div id="input-option{{ option.product_option_id }}">
+																	{% for option_value in option.product_option_value %}
+																		<div class="radio">
+																			<label>
+																				<input type="radio" name="option[{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}"/>
+																				{% if option_value.image %}
+																					<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail"/>
+																				{% endif %}
+																				{{ option_value.name }}
+																				{% if option_value.price %}
+																					({{ option_value.price_prefix }}{{ option_value.price }})
+																				{% endif %}
+																			</label>
+																		</div>
+																	{% endfor %}
+																</div>
+															</div>
+														{% endif %}
+														{% if option.type == 'checkbox' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label">{{ option.name }}</label>
+																<div id="input-option{{ option.product_option_id }}">
+																	{% for option_value in option.product_option_value %}
+																		<div class="checkbox">
+																			<label>
+																				<input type="checkbox" name="option[{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}"/>
+																				{% if option_value.image %}
+																					<img src="{{ option_value.image }}" alt="{{ option_value.name }} {% if option_value.price %} {{ option_value.price_prefix }} {{ option_value.price }} {% endif %}" class="img-thumbnail"/>
+																				{% endif %}
+																				{{ option_value.name }}
+																				{% if option_value.price %}
+																					({{ option_value.price_prefix }}{{ option_value.price }})
+																				{% endif %}
+																			</label>
+																		</div>
+																	{% endfor %}
+																</div>
+															</div>
+														{% endif %}
+														{% if option.type == 'text' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+																<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control"/>
+															</div>
+														{% endif %}
+														{% if option.type == 'textarea' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+																<textarea name="option[{{ option.product_option_id }}]" rows="5" placeholder="{{ option.name }}" id="input-option{{ option.product_option_id }}" class="form-control">{{ option.value }}</textarea>
+															</div>
+														{% endif %}
+														{% if option.type == 'file' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label">{{ option.name }}</label>
+																<button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="{{ text_loading }}" class="btn btn-default btn-block">
+																	<i class="fa fa-upload"></i>
+																	{{ button_upload }}</button>
+																<input type="hidden" name="option[{{ option.product_option_id }}]" value="" id="input-option{{ option.product_option_id }}"/>
+															</div>
+														{% endif %}
+														{% if option.type == 'date' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+																<div class="input-group date">
+																	<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD" id="input-option{{ option.product_option_id }}" class="form-control"/>
+																	<span class="input-group-btn">
+																		<button class="btn btn-default" type="button">
+																			<i class="fa fa-calendar"></i>
+																		</button>
+																	</span>
+																</div>
+															</div>
+														{% endif %}
+														{% if option.type == 'datetime' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+																<div class="input-group datetime">
+																	<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="YYYY-MM-DD HH:mm" id="input-option{{ option.product_option_id }}" class="form-control"/>
+																	<span class="input-group-btn">
+																		<button type="button" class="btn btn-default">
+																			<i class="fa fa-calendar"></i>
+																		</button>
+																	</span>
+																</div>
+															</div>
+														{% endif %}
+														{% if option.type == 'time' %}
+															<div class="form-group{% if option.required %} required {% endif %}">
+																<label class="control-label" for="input-option{{ option.product_option_id }}">{{ option.name }}</label>
+																<div class="input-group time">
+																	<input type="text" name="option[{{ option.product_option_id }}]" value="{{ option.value }}" data-date-format="HH:mm" id="input-option{{ option.product_option_id }}" class="form-control"/>
+																	<span class="input-group-btn">
+																		<button type="button" class="btn btn-default">
+																			<i class="fa fa-calendar"></i>
+																		</button>
+																	</span>
+																</div>
+															</div>
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+												<button class="btn-primary" type="button" onclick="cart.add('{{ product.product_id }}');">{{ button_cart }}</button>
+											</div>
+										</div>
+									</div>
+									<div class="image">
+										<a class="lazy lazy-loaded" href="{{ product.href }}" style="padding-bottom: 121.50%">
+											<img alt="{{ product.name }}" title="{{ product.name }}" class="img-primary" data-src="{{ product.thumb }}" src="{{ product.thumb }}">
+											<img alt="{{ product.name }}" title="{{ product.name }}" class="img-secondary" data-src="{{ product.thumb }}" src="{{ product.thumb }}">
+										</a>
+										{# <div class="discount"> #}
+									{# <span>-20%</span> #}
+										{# </div> #}
+										{# <button class="btn-primary quickview" type="button" data-rel="details" data-product="33">Quick View</button> #}
+									</div>
 
+									<div class="caption">
+										<div class="name">
+											<a href="{{ product.href }}">{{ product.name }}</a>
+										</div>
+										{% if review_status %}
+											<div class="rating">
+												<span>
+													{% for i in 1..5 %}
+														{% if rating < i %}
+															<span class="fa fa-stack">
+																<i class="fa fa-star-o fa-stack-1x"></i>
+															</span>
+														{% else %}
+															<span class="fa fa-stack">
+																<i class="fa fa-star fa-stack-1x"></i>
+																<i class="fa fa-star-o fa-stack-1x"></i>
+															</span>
+														{% endif %}
+													{% endfor %}
+												</span>
+											</div>
+										{% endif %}
+										{% if product.price %}
+											<p class="price">
+												{% if not product.special %}
+													{{ product.price }}
+												{% else %}
+													<span class="price-new">{{ product.special }}</span>
+													<span class="price-old">{{ product.price }}</span>
+												{% endif %}
+											</p>
+										{% endif %}
+									</div>
+									<div class="cart-button">
+										{% if options %}
+											<button type="button" class="btn-icon" data-toggle="tooltip" onclick="ajaxAdd($(this),{{ product.product_id }});">
+												<i class="fl-puppets-market1"></i>
+											</button>
+										{% else %}
+											<button type="button" class="btn-icon" data-toggle="tooltip" onclick="cart.add('{{ product.product_id }}');">
+												<i class="fl-puppets-market1"></i>
+											</button>
+										{% endif %}
+										<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="wishlist.add('{{ product.product_id }}');" data-original-title="{{ button_wishlist }}">
+											<i class="fa fa-heart-o"></i>
+										</button>
+										<button type="button" class="btn-icon" data-toggle="tooltip" title="" onclick="compare.add('{{ product.product_id }}');" data-original-title="{{ button_compare }}">
+											<i class="fa fa-balance-scale"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+							{% set i = i + 1 %}
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+			{% if tags %}
+				<p>{{ text_tags }}
+					{% for i in 0..tags|length %}
+						{% if i < (tags|length - 1) %}
+							<a href="{{ tags[i].href }}">{{ tags[i].tag }}</a>,
+						{% else %}
+							<a href="{{ tags[i].href }}">{{ tags[i].tag }}</a>
+						{% endif %}
+					{% endfor %}
+				</p>
+			{% endif %}
 		</div>
-
 	</div>
 </div>
 {{ footer }}
