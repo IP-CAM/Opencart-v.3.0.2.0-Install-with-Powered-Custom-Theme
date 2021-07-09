@@ -598,7 +598,7 @@
 										</div>
 									</div>
 									<div class="image">
-										<a class="lazy lazy-loaded" href="{{ product.href }}" style="padding-bottom: 121.50%">
+										<a class="lazy lazy-loaded" href="{{ product.href }}" style="padding-bottom: 100%">
 											<img alt="{{ product.name }}" title="{{ product.name }}" class="img-primary" data-src="{{ product.thumb }}" src="{{ product.thumb }}">
 											<img alt="{{ product.name }}" title="{{ product.name }}" class="img-secondary" data-src="{{ product.thumb }}" src="{{ product.thumb }}">
 										</a>
@@ -609,7 +609,7 @@
 									</div>
 
 									<div class="caption">
-										<div class="name">
+										<div class="name" style="margin: 0">
 											<a href="{{ product.href }}">{{ product.name }}</a>
 										</div>
 										{% if review_status %}
@@ -631,17 +631,17 @@
 											</div>
 										{% endif %}
 										{% if product.price %}
-											<p class="price">
+											<div class="price" style="margin: 0">
 												{% if not product.special %}
 													{{ product.price }}
 												{% else %}
 													<span class="price-new">{{ product.special }}</span>
 													<span class="price-old">{{ product.price }}</span>
 												{% endif %}
-											</p>
+											</div>
 										{% endif %}
 									</div>
-									<div class="cart-button">
+									<div class="cart-button" style="margin: 10px">
 										{% if options %}
 											<button type="button" class="btn-icon" data-toggle="tooltip" onclick="ajaxAdd($(this),{{ product.product_id }});">
 												<i class="fl-puppets-market1"></i>
