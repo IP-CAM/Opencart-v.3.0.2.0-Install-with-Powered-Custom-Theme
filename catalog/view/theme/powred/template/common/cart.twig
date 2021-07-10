@@ -11,36 +11,28 @@
 	<ul class="pull-right toggle_cont">
 		{% if products or vouchers %}
 			<li>
-				<table class="table table-striped">
+				<table class="table">
 					{% for product in products %}
 						<tr>
-							<td class="text-center">
+							<td class="text-center td-img">
 								{% if product.thumb %}
 									<a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail"/></a>
 								{% endif %}
 							</td>
 							<td class="text-left">
-								<a href="{{ product.href }}">{{ product.name }}</a>
-								{% if product.option %}
-									{% for option in product.option %}
-										<br/>
-										-
-										<small>{{ option.name }}
-											{{ option.value }}</small>
-									{% endfor %}
-								{% endif %}
-								{% if product.recurring %}
-									<br/>
-									-
-									<small>{{ text_recurring }}
-										{{ product.recurring }}</small>
-								{% endif %}
+								<div class="name">
+									<a href="{{ product.href }}">{{ product.name }}</a>
+								</div>
+								<div>
+									<span class="price-cart">
+										<i>x
+											{{ product.quantity }}</i>
+										<b>{{ product.total }}</b>
+									</span>
+								</div>
 							</td>
-							<td class="text-right">x
-								{{ product.quantity }}</td>
-							<td class="text-right">{{ product.total }}</td>
 							<td class="text-center">
-								<button type="button" onclick="cart.remove('{{ product.cart_id }}');" title="{{ button_remove }}" class="btn btn-danger btn-xs">
+								<button type="button" onclick="cart.remove('{{ product.cart_id }}');" title="{{ button_remove }}" class="btn-danger btn-xs">
 									<i class="fa fa-times"></i>
 								</button>
 							</td>
@@ -49,11 +41,18 @@
 					{% for voucher in vouchers %}
 						<tr>
 							<td class="text-center"></td>
-							<td class="text-left">{{ voucher.description }}</td>
-							<td class="text-right">x&nbsp;1</td>
-							<td class="text-right">{{ voucher.amount }}</td>
+							<td class="text-left">
+								{{ voucher.description }}
+								<div>
+									<span class="price-cart">
+										<i>x
+											{{ voucher.amount }}</i>
+										<b>{{ product.total }}</b>
+									</span>
+								</div>
+							</td>
 							<td class="text-center text-danger">
-								<button type="button" onclick="voucher.remove('{{ voucher.key }}');" title="{{ button_remove }}" class="btn btn-danger btn-xs">
+								<button type="button" onclick="voucher.remove('{{ voucher.key }}');" title="{{ button_remove }}" class="btn-danger btn-xs">
 									<i class="fa fa-times"></i>
 								</button>
 							</td>
@@ -62,33 +61,27 @@
 				</table>
 			</li>
 			<li>
-				<div>
-					<table class="table table-bordered">
+				<table class="table total">
+					<tbody>
 						{% for total in totals %}
 							<tr>
-								<td class="text-right">
-									<strong>{{ total.title }}</strong>
+								<td class="text-left">
+									{{ total.title }}:
+									<strong>{{ total.text }}</strong>
 								</td>
-								<td class="text-right">{{ total.text }}</td>
+								<td class="text-right"></td>
 							</tr>
 						{% endfor %}
-					</table>
-					<p class="text-right">
-						<a href="{{ cart }}">
-							<strong>
-								<i class="fa fa-shopping-cart"></i>
-								{{ text_cart }}</strong>
-						</a>&nbsp;&nbsp;&nbsp;<a href="{{ checkout }}">
-							<strong>
-								<i class="fa fa-share"></i>
-								{{ text_checkout }}</strong>
-						</a>
-					</p>
+					</tbody>
+				</table>
+				<div class="text-right">
+					<a href="{{ cart }}" class="btn">{{ text_cart }}</a>
+					<a href="{{ checkout }}" class="btn-primary">{{ text_checkout }}</a>
 				</div>
 			</li>
 		{% else %}
 			<li>
-				<p class="text-center">{{ text_empty }}</p>
+				<div class="text-center">{{ text_empty }}</div>
 			</li>
 		{% endif %}
 	</ul>
