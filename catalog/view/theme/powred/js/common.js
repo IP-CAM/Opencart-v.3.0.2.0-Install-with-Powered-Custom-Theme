@@ -182,7 +182,7 @@ function returnOptions() {
 var timer;
 ; (function ($) {
     if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
-        console.log(sessionStorage);
+        //console.log(sessionStorage);
     }
 }
 )(jQuery);
