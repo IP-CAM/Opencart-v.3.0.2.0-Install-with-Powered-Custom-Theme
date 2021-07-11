@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+	<html dir="{{ direction }}" lang="{{ lang }}"> <!--<![endif]-->
+	<!--<![endif]-->
+		<head>
+		<meta charset="UTF-8"/> <meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title>
 			{{ title }}
@@ -145,6 +149,6 @@
 
 				</div>
 			</header>
-		</body>
+		</div>
 	</body>
 </html>
