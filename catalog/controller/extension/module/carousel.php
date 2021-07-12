@@ -1,6 +1,8 @@
 <?php
 class ControllerExtensionModuleCarousel extends Controller {
 	public function index($setting) {
+		$this->load->language('extension/module/carousel');
+
 		static $module = 0;
 
 		$this->load->model('design/banner');

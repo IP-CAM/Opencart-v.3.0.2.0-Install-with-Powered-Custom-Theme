@@ -2,78 +2,29 @@
 	<div class="box manufacturer">
 		<div class="box-heading">
 			<h2>
-				Our Brands
+				{{ heading_title }}
 			</h2>
 		</div>
 		<div class="box-content">
 			<table class="brand-table">
 				<tbody>
-					<tr>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=194.html">
-								<img src="image/catalog/logo/lorac.png" alt="Lorac" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=200.html">
-								<img src="image/catalog/logo/essie.png" alt="Essie" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=193.html">
-								<img src="image/catalog/logo/butter-london.png" alt="Butter London" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=197.html">
-								<img src="image/catalog/logo/cargo.png" alt="Cargo" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=195.html">
-								<img src="image/catalog/logo/janeiredale.png" alt="Jane Iredate" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=192.html">
-								<img src="image/catalog/logo/stila.png" alt="Stila" class="img-responsive"/>
-							</a>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=199.html">
-
-								<img src="image/catalog/logo/blinc.png" alt="Blinc" class="img-responsive"/>
-
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=198.html">
-								<img src="image/catalog/logo/korres.png" alt="Korres" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=201.html">
-								<img src="image/catalog/logo/make.png" alt="Make" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=196.html">
-								<img src="image/catalog/logo/balm.png" alt="The Balm" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=202.html">
-								<img src="image/catalog/logo/julep.png" alt="Julep" class="img-responsive"/>
-							</a>
-						</td>
-						<td>
-							<a href="index.php%3Froute=product%252Fmanufacturer%252Finfo&amp;manufacturer_id=203.html">
-								<img src="image/catalog/logo/tenoverten.png" alt="Tenoverten" class="img-responsive"/>
-							</a>
-						</td>
-					</tr>
+					{% set i = 0 %}
+					{% for banner in banners %}
+						{% set i = i + 1 %}
+						{% if i == 1 or i % 7 == 0 %}
+							<tr>
+							{% endif %}
+							<td>
+								{% if banner.link %}
+									<a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive"/></a>
+								{% else %}
+								<a href="" onclick="return false;"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive"/></a>
+								{% endif %}
+							</td>
+							{% if i % 6 == 0 %}
+							</tr>
+						{% endif %}
+					{% endfor %}
 				</tbody>
 			</table>
 			<div class="clear"></div>
