@@ -221,7 +221,7 @@ var cart = {
                 if (json['success']) {
                     $('.ajax-overlay').removeClass('visible');
                     returnOptions();
-                    $('#content').parent().before('<div class="alert alert-success"><i class="material-design-verification24"></i> ' + json['success'] + '<button type="button" class="close material-design-close47"></button></div>');
+                    $('#content').parent().before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                     $('#cart-total').html(json['total']);
                     $('#cart-total2').html(json['total2']);
                     $('#cart > ul').load('index.php?route=common/cart/info ul li');
@@ -246,7 +246,7 @@ var cart = {
                     location = json['redirect'];
                 }
                 if (json['success']) {
-                    $('#content').parent().before('<div class="alert alert-success"><i class="material-design-verification24"></i> ' + json['success'] + '<button type="button" class="close material-design-close47"></button></div>');
+                    $('#content').parent().before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                     $('#cart-total').html(json['total']);
                     $('#cart-total2').html(json['total2']);
                     $('#cart > ul').load('index.php?route=common/cart/info ul li');
@@ -352,7 +352,7 @@ var wishlist = {
                     $('#content').parent().before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
                 if (json['info']) {
-                    $('#content').parent().before('<div class="alert alert-info"><i class="material-design-round52"></i> ' + json['info'] + '<button type="button" class="close material-design-close47"></button></div>');
+                    $('#content').parent().before('<div class="alert alert-info"><i class="fas fa-info-circle"></i> ' + json['info'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
                 $('#wishlist-total').html(json['total']);
                 timer = setTimeout(function () {
@@ -376,12 +376,12 @@ var compare = {
             success: function (json) {
                 $('.alert').remove();
                 if (json['info']) {
-                    $('#content').parent().before('<div class="alert alert-info"><i class="material-design-round52"></i> ' + json['info'] + '<button type="button" class="close material-design-close47"></button></div>');
+                    $('#content').parent().before('<div class="alert alert-info"><i class="fas fa-info-circle"></i> ' + json['info'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                 }
                 if (json['success']) {
-                    $('#content').parent().before('<div class="alert alert-success"><i class="material-design-verification24"></i> ' + json['success'] + '<button type="button" class="close material-design-close47"></button></div>');
+                    $('#content').parent().before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                     if (json['warning']) {
-                        $('.alert').append('<div class="alert alert-warning"><i class="material-design-warning37"></i> ' + json['warning'] + '<button type="button" class="close material-design-close47"></button></div>');
+                        $('.alert').append('<div class="alert alert-warning"><i class="fas fa-exclamation-circle"></i> ' + json['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
                     }
                     $('#compare-total').attr('data-original-title', json['total']);
                     $('#compare-total').html('<span>' + json['total'] + '</span>');
