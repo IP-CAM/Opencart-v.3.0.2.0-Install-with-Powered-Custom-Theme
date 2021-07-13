@@ -7,6 +7,16 @@ class ControllerCommonFooter extends Controller
 
 		$this->load->model('catalog/information');
 
+		$this->document->addScript('catalog/view/javascript/powred/swiper/swinit.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/jquery.elevatezoom.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/device.min.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/livesearch.min.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/common.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/script.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/photo-swipe/klass.min.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/photo-swipe/code.photoswipe-3.0.5.min.js', 'footer');
+		$this->document->addScript('catalog/view/theme/powred/js/jquery.selectbox-0.2.min.js', 'footer');
+
 		$data['informations'] = array();
 
 		foreach ($this->model_catalog_information->getInformations() as $result) {

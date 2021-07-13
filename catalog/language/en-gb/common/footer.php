@@ -18,3 +18,5 @@ $_['text_order']        = 'Order History';
 $_['text_wishlist']     = 'Wish List';
 $_['text_newsletter']   = 'Newsletter';
 $_['text_powered']      = 'Powered By <a href="https://ocstore.com/">ocStore</a><br /> %s &copy; %s';
+$_['text_subscribe']    = 'Subscribe';
+$_['newsletter_description'] = 'Sign up to receive emails on new product arrivals, special offers and exclusive events';
