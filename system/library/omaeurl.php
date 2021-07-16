@@ -3,7 +3,8 @@
 /**
  * Basic remote URLs interaction class
  */
-class OmaeUrl {
+class Omaeurl
+{
 
     /**
      * Contains current instance URL
@@ -109,7 +110,8 @@ class OmaeUrl {
      * 
      * @throws Exception
      */
-    public function __construct($url = '') {
+    public function __construct($url = '')
+    {
         if ($this->checkModCurl()) {
             $this->setUrl($url);
             $this->loadOpts();
@@ -125,7 +127,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    protected function setUrl($url = '') {
+    protected function setUrl($url = '')
+    {
         $this->url = $url;
     }
 
@@ -134,15 +137,17 @@ class OmaeUrl {
      * 
      * @return bool
      */
-    protected function checkModCurl() {
+    protected function checkModCurl()
+    {
         $result = true;
         if (!extension_loaded('curl')) {
             $result = false;
         }
-        return($result);
+        return ($result);
     }
 
-    public function getResponseHeaders() {
+    public function getResponseHeaders()
+    {
         return $this->responseHeaders;
     }
 
@@ -153,7 +158,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function setHeadersReturn($state) {
+    public function setHeadersReturn($state)
+    {
         $this->headersFlag = $state;
         $this->setOpt(CURLOPT_HEADER, $this->headersFlag);
     }
@@ -165,7 +171,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function setReferrer($url) {
+    public function setReferrer($url)
+    {
         $this->referrer = $url;
         $this->setOpt(CURLOPT_REFERER, $this->referrer);
     }
@@ -175,9 +182,10 @@ class OmaeUrl {
      * 
      * @return void
      */
-    protected function loadOpts() {
+    protected function loadOpts()
+    {
         $this->setOpt(CURLOPT_CONNECTTIMEOUT, $this->timeout);
-        $this->setOpt(CURLOPT_HEADER, false);
+        $this->setOpt(CURLOPT_HEADER, true);
         $this->setOpt(CURLOPT_FOLLOWLOCATION, true);
         $this->setOpt(CURLOPT_MAXREDIRS, 10);
         $this->setOpt(CURLOPT_SSL_VERIFYHOST, false);
@@ -193,7 +201,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function dataPost($field = '', $value = '') {
+    public function dataPost($field = '', $value = '')
+    {
         if (!empty($field)) {
             $this->postData[$field] = $value;
         } else {
@@ -209,7 +218,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function dataGet($field = '', $value = '') {
+    public function dataGet($field = '', $value = '')
+    {
         if (!empty($field)) {
             $this->getData[$field] = $value;
         } else {
@@ -225,7 +235,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function dataCookie($name = '', $value = '') {
+    public function dataCookie($name = '', $value = '')
+    {
         if (!empty($name)) {
             $this->cookieData[$name] = $value;
         } else {
@@ -241,7 +252,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function dataHeader($name = '', $value = '') {
+    public function dataHeader($name = '', $value = '')
+    {
         if (!empty($name)) {
             $this->headersData[$name] = $value;
         } else {
@@ -254,7 +266,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    protected function flushPostData() {
+    protected function flushPostData()
+    {
         $this->postData = array();
     }
 
@@ -263,7 +276,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    protected function flushGetData() {
+    protected function flushGetData()
+    {
         $this->getData = array();
     }
 
@@ -272,7 +286,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    protected function flushCookieData() {
+    protected function flushCookieData()
+    {
         $this->cookieData = array();
     }
 
@@ -281,7 +296,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    protected function flushHeadersData() {
+    protected function flushHeadersData()
+    {
         $this->headersData = array();
     }
 
@@ -293,7 +309,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function setOpt($option, $value) {
+    public function setOpt($option, $value)
+    {
         $this->curlOpts[$option] = $value;
     }
 
@@ -304,7 +321,8 @@ class OmaeUrl {
      * 
      * @throws Exception
      */
-    public function response($url = '') {
+    public function response($url = '')
+    {
         $result = '';
         if (!empty($url)) {
             $this->setUrl($url);
@@ -326,18 +344,23 @@ class OmaeUrl {
             //appending POST vars into options
             if (!empty($this->postData)) {
                 $postFields = '';
-                foreach ($this->postData as $postKey => $postValue) {
-                    $postFields .= $postKey . '=' . $postValue . '&';
+                if (@$this->postData['type'] == 'json') {
+                    unset($this->postData['type']);
+                    $postFields = json_encode($this->postData);
+                } else {
+                    foreach ($this->postData as $postKey => $postValue) {
+                        $postFields .= $postKey . '=' . $postValue . '&';
+                    }
+                    $postFields = substr($postFields, 0, -1);
                 }
-                $postFields = substr($postFields, 0, -1);
                 $this->setOpt(CURLOPT_POSTFIELDS, $postFields);
             }
 
             //appending cookie data into options
             if (!empty($this->cookieData)) {
                 $this->setOpt(CURLOPT_COOKIE, implode('; ', array_map(function ($k, $v) {
-                                    return $k . '=' . $v;
-                                }, array_keys($this->cookieData), array_values($this->cookieData))));
+                    return $k . '=' . $v;
+                }, array_keys($this->cookieData), array_values($this->cookieData))));
             }
 
             //and some custom headers
@@ -366,14 +389,14 @@ class OmaeUrl {
             }
             $this->errorCode = curl_errno($ch);
             $this->errorMessage = curl_error($ch);
-            if ($this->errorCode OR $this->errorMessage) {
+            if ($this->errorCode or $this->errorMessage) {
                 $this->error = true;
             }
             curl_close($ch);
         } else {
             throw new Exception('SHINDEIRU_URL_EMPTY');
         }
-        return($result);
+        return ($result);
     }
 
     /**
@@ -381,13 +404,14 @@ class OmaeUrl {
      * 
      * @return array
      */
-    public function error() {
+    public function error()
+    {
         $result = array();
         if ($this->error) {
             $result['errorcode'] = $this->errorCode;
             $result['errormessage'] = $this->errorMessage;
         }
-        return($result);
+        return ($result);
     }
 
     /**
@@ -397,7 +421,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function setUserAgent($userAgent) {
+    public function setUserAgent($userAgent)
+    {
         if (!empty($userAgent)) {
             $this->userAgent = $userAgent;
             $this->setOpt(CURLOPT_USERAGENT, $this->userAgent);
@@ -411,7 +436,8 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function setTimeout($timeout) {
+    public function setTimeout($timeout)
+    {
         $timeout = preg_replace("#[^0-9]#Uis", '', $timeout);
         if (!empty($timeout)) {
             $this->timeout = $timeout;
@@ -427,9 +453,26 @@ class OmaeUrl {
      * 
      * @return void
      */
-    public function setBasicAuth($login, $password) {
+    public function setBasicAuth($login, $password)
+    {
         $this->setOpt(CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         $this->setOpt(CURLOPT_USERPWD, $login . ':' . $password);
     }
 
+    public function request($url = '', $getData = [], $postData = [], $headers = [])
+    {
+        foreach ($headers as $key => $value) {
+            $this->dataHeader($key, $value);
+        }
+
+        foreach ($getData as $key => $value) {
+            $this->dataGet($key, $value);
+        }
+
+        foreach ($postData as $key => $value) {
+            $this->dataPost($key, $value);
+        }
+
+        return json_decode($this->response($url), true);
+    }
 }

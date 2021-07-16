@@ -12,27 +12,72 @@ class ControllerExtensionModuleNovaposhta extends Controller
     {
         $this->load->model('extension/module/cron');
 
-        $this->client = '';
+        $this->client = new Omaeurl;
 
-        $this->runJobs();
+        if (($this->request->server['REQUEST_METHOD'] == 'GET')) {
+			if (isset($this->request->get['action'])) {
+                if ($this->request->get['action'] == 'allcities') {
+                    die($this->getCities());
+                }
+            }
+        }
+        // $this->updateCities();
+
+        die;
     }
 
-    private function runJobs()
+    public function getCities()
     {
-        $this->updateCities();
+        $result = file_get_contents(DIR_UPLOAD . 'cities.json');
+
+        if (empty($result)) {
+            $this->updateCities();
+            $result = $this->getCities();
+        }
+
+        return $result;
+    }
+
+    public function getStreets($cityRef)
+    {
+        $client = $this->client;
+        $body = [
+            'type' => 'json',
+            'modelName' => 'Address',
+            'calledMethod' => 'getStreet',
+            'methodProperties' => [
+                'CityRef' => $cityRef
+            ],
+            'apiKey' => self::API_KEY
+        ];
+        $response = $client->request(self::API_URL, [], $body);
+
+        return $response;
     }
 
     private function updateCities()
     {
-        $headers = [
-            'Accept' => 'application/json'
-        ];
+        $client = $this->client;
         $body = [
+            'type' => 'json',
             'modelName' => 'Address',
             'calledMethod' => 'getCities',
             'apiKey' => self::API_KEY
         ];
-        
-        die;
+        $response = $client->request(self::API_URL, [], $body);
+
+        $this->putToFile('cities.json', $response);
+    }
+
+    private function putToFile($fileName, $content)
+    {
+        if (!empty($response['errors'])) {
+            return false;
+        }
+        $content = json_encode(['data' => $content['data']]);
+
+        file_put_contents(DIR_UPLOAD . $fileName, $content);
+
+        chmod(DIR_UPLOAD . $fileName, 0777);
     }
 }
