@@ -12,16 +12,27 @@ class ControllerExtensionModuleNovaposhta extends Controller
     {
         $this->load->model('extension/module/cron');
 
-        if (class_exists('\GuzzleHttp\Client')) {
-            $this->client = new \GuzzleHttp\Client;
-        }
+        $this->client = '';
 
         $this->runJobs();
     }
 
     private function runJobs()
     {
-        var_dump($this->client);
+        $this->updateCities();
+    }
+
+    private function updateCities()
+    {
+        $headers = [
+            'Accept' => 'application/json'
+        ];
+        $body = [
+            'modelName' => 'Address',
+            'calledMethod' => 'getCities',
+            'apiKey' => self::API_KEY
+        ];
+        
         die;
     }
 }
