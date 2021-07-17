@@ -10,8 +10,6 @@ class ControllerExtensionModuleNovaposhta extends Controller
 
     public function index()
     {
-        $this->load->model('extension/module/cron');
-
         $this->client = new Omaeurl;
 
         if (($this->request->server['REQUEST_METHOD'] == 'GET')) {
@@ -41,15 +39,11 @@ class ControllerExtensionModuleNovaposhta extends Controller
     public function getStreets($cityRef)
     {
         $client = $this->client;
-        $body = [
-            'type' => 'json',
-            'modelName' => 'Address',
-            'calledMethod' => 'getStreet',
-            'methodProperties' => [
-                'CityRef' => $cityRef
-            ],
-            'apiKey' => self::API_KEY
-        ];
+        $body['type'] = 'json';
+        $body['apiKey'] = self::API_KEY;
+        $body['modelName'] = 'Address';
+        $body['calledMethod'] = 'getStreet';
+        $body['methodProperties']['CityRef'] = $cityRef;
         $response = $client->request(self::API_URL, [], $body);
 
         return $response;
@@ -58,12 +52,10 @@ class ControllerExtensionModuleNovaposhta extends Controller
     private function updateCities()
     {
         $client = $this->client;
-        $body = [
-            'type' => 'json',
-            'modelName' => 'Address',
-            'calledMethod' => 'getCities',
-            'apiKey' => self::API_KEY
-        ];
+        $body['type'] = 'json';
+        $body['apiKey'] = self::API_KEY;
+        $body['modelName'] = 'Address';
+        $body['calledMethod'] = 'getCities';
         $response = $client->request(self::API_URL, [], $body);
 
         $this->putToFile('cities.json', $response);
